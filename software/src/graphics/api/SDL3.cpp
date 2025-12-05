@@ -2,6 +2,11 @@
 
 namespace stanza {
     void SDL3Renderer::init(int width, int height) {
+        #ifdef __arm__ // assume we're compiling on rpi
+        SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "kmsdrm");
+        SDL_SetHint(SDL_HINT_KMSDRM_REQUIRE_DRM_MASTER, "0");
+        #endif
+
         if (!SDL_Init(SDL_INIT_VIDEO)) {
             logger.error("SDL_Init failed with {}!", SDL_GetError());
             throw new std::runtime_error("Failed to initialize SDL.");
