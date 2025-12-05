@@ -1,14 +1,12 @@
 #pragma once
 #include <iostream>
+#include <graphics/Renderer.hpp>
 
 namespace stanza {
-    enum RenderJobType {
-        RENDER_TEXT,
-        RENDER_TEXTURE
-    };
+    class Renderer;
 
-    struct RenderJob {
-        RenderJobType type;
-        
+    class RenderJob {
+    public:
+        virtual void render(Renderer* renderer) = 0;
     };
 }

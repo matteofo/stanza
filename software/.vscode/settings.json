@@ -1,5 +1,10 @@
 {
     "files.associations": {
+        "*.dbclient-js": "javascript",
+        "*.embeddedhtml": "html",
+        "*.ucl": "plaintext",
+        "*.m5p": "platformio-debug.asm",
+        "*.h": "c",
         "format": "cpp",
         "any": "cpp",
         "array": "cpp",
@@ -54,7 +59,17 @@
         "locale": "cpp",
         "__node_handle": "cpp",
         "execution": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "__locale": "cpp",
+        "bitset": "cpp",
+        "deque": "cpp",
+        "istream": "cpp",
+        "mutex": "cpp",
+        "print": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "streambuf": "cpp",
+        "variant": "cpp"
     },
     "makefile.configureOnOpen": true
 }

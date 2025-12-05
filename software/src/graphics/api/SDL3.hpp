@@ -5,6 +5,7 @@
 #include <util/Logger.hpp>
 
 #include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 namespace stanza {
     class SDL3Renderer: public Renderer {
@@ -16,9 +17,13 @@ namespace stanza {
         Logger logger;
 
         void init(int width, int height);
+        virtual CachedFont* loadFont(Font font) override;
     public:
-        void update() override;
+        bool update() override;
         void render() override;
+
+        void renderText(Font font, Point at, const std::string text) override;
+
         Texture loadTexture(const std::string name) override;
 
         SDL3Renderer(int width, int height);
