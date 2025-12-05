@@ -34,11 +34,17 @@ namespace stanza {
         return this->color;
     }
 
+    void Font::setColor(Color color) {
+        this->color.r = color.r;
+        this->color.g = color.g;
+        this->color.b = color.b;
+    }
+
     Font::Font(Font& _font) {
         this->name = _font.name;
         this->weight = _font.weight;
         this->size = _font.size;
-        this->color = Color::black();
+        this->color = _font.color;
     }
 
     Font::Font(const std::string name) {
@@ -60,13 +66,5 @@ namespace stanza {
         this->weight = weight;
         this->size = size;
         this->color = Color::black();
-    }
-
-    Font& Font::setColor(Color color) {
-        this->color.r = color.r;
-        this->color.g = color.g;
-        this->color.b = color.b;
-
-        return *this;
     }
 }

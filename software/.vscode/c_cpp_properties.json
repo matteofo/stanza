@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/opt/homebrew/include"
+                "/opt/homebrew/include",
+                "/usr/include/libcamera"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

@@ -69,7 +69,10 @@
         "queue": "cpp",
         "stack": "cpp",
         "streambuf": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "valarray": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp"
     },
     "makefile.configureOnOpen": true
 }

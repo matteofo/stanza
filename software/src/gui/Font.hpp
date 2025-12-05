@@ -27,7 +27,7 @@ namespace stanza {
         FontWeight getWeight();
         Color getColor();
 
-        Font& setColor(Color color);
+        void setColor(Color color);
 
         Font(Font& _font);
         Font(const std::string name);

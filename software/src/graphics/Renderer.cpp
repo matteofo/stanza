@@ -6,6 +6,9 @@ namespace stanza {
     }
 
     void Renderer::clearJobs() {
+        for (auto& job : this->jobs) {
+            delete job;
+        }
         this->jobs.clear();
     }
 }

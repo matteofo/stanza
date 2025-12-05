@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <print>
 #include <graphics/Renderer.hpp>
 #include <graphics/RenderJob.hpp>
 #include <gui/Font.hpp>

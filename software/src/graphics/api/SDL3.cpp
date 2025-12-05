@@ -61,7 +61,6 @@ namespace stanza {
         }
 
         SDL_RenderPresent(this->renderer);
-    
         this->clearJobs();
     }
 

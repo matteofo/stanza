@@ -4,10 +4,15 @@
 #include <graphics/api/SDL3.hpp>
 #include <graphics/jobs/RenderTextJob.hpp>
 
+#include <camera/Camera.hpp>
+
+#include <util/Logger.hpp>
+
 namespace stanza {
     class StanzaApp {
     private:
         Renderer* renderer;
+        Logger logger;
     public:
         void run();
         StanzaApp();
