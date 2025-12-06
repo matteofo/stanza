@@ -19,7 +19,7 @@ namespace stanza {
 
         logger.log("Initialized SDL3 backend.");
 
-        this->window = SDL_CreateWindow("SDL3 Renderer", width, height, 0);
+        this->window = SDL_CreateWindow("SDL3 Renderer", width, height, SDL_WINDOW_RESIZABLE);
         this->renderer = SDL_CreateRenderer(this->window, NULL);
     }
 
