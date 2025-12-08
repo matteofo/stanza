@@ -67,10 +67,10 @@ namespace stanza {
     }
 
     bool Camera::useCamera(std::shared_ptr<libcamera::Camera> camera) {
-        return Camera::useCamera(camera, -1, -1);
+        return Camera::useCamera(camera, -1, -1, false);
     }
 
-    bool Camera::useCamera(std::shared_ptr<libcamera::Camera> camera, int cameraWidth, int cameraHeight) {
+    bool Camera::useCamera(std::shared_ptr<libcamera::Camera> camera, int cameraWidth, int cameraHeight, bool rotate) {
         Camera::_camera = Camera::_mgr->get(camera->id());
         int acquired = Camera::_camera->acquire();
         if (acquired != 0) {
@@ -96,9 +96,12 @@ namespace stanza {
         }
 
         Camera::_config->validate();
-
         Camera::_fourcc(format, streamConfig.pixelFormat.fourcc());
         logger.log("Validated camera configuration ({}): {}", format, streamConfig.toString());
+        
+        if (rotate)
+            Camera::_config->orientation = libcamera::Orientation::Rotate180Mirror;
+
         Camera::_camera->configure(Camera::_config.get());
 
         u32 width = streamConfig.size.width, height = streamConfig.size.height;

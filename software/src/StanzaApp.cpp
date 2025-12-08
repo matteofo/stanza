@@ -22,7 +22,7 @@ namespace stanza {
         
         std::shared_ptr<libcamera::Camera> camera = cameras.value()[0];
         // sets up the camera, framebuffers and frame requests
-        if (!Camera::useCamera(camera, 3264, 2448)) {
+        if (!Camera::useCamera(camera, 3264 / 2, 2448 / 2, true)) {
             throw new std::runtime_error(std::format("Failed to use Camera {}", camera->id()));
         }
 
