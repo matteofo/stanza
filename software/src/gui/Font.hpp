@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include <graphics/Renderer.hpp>
+#include <platform/Platform.hpp>
 #include <gui/Color.hpp>
 
 namespace stanza {

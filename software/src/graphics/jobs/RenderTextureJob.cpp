@@ -1,8 +1,8 @@
 #include <graphics/jobs/RenderTextureJob.hpp>
 
 namespace stanza {
-    void RenderTextureJob::render(Renderer* renderer) {
-        renderer->renderTexture(this->texture, this->position, this->mode);
+    void RenderTextureJob::render(Platform* platform) {
+        platform->renderTexture(this->texture, this->position, this->mode);
     }
 
     TextureFitMode RenderTextureJob::getFitMode() {

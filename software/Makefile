@@ -20,7 +20,7 @@ build/%.o: src/%.cpp
 	@ echo Building $@...
 	@ mkdir -p ./build
 	@ mkdir -p $(dir $@)
-	@ $(CC) $(INCLUDES) $(CCFLAGS) -c $< -o $(subst src,build,$@)
+	@ $(CC) $(INCLUDES) $(CCFLAGS) -c $< -o $(subst src,build,$@) -g
 
 clean:
 	@ rm -rf ./build

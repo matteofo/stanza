@@ -2,7 +2,7 @@
 
 namespace stanza {
     StanzaApp::StanzaApp() : logger("StanzaApp") {
-        this->renderer = new SDL3Renderer();
+        this->platform = new PlatformSDL3();
     }
 
     void StanzaApp::run() {
@@ -22,27 +22,38 @@ namespace stanza {
         
         std::shared_ptr<libcamera::Camera> camera = cameras.value()[0];
         // sets up the camera, framebuffers and frame requests
-        if (!Camera::useCamera(camera, 3264 / 2, 2448 / 2, true)) {
+
+        bool used = false;
+        #ifdef PLATORM_PI
+        used = Camera::useCamera(camera, 3264 / 2, 2448 / 2, true)
+        #else
+        used = Camera::useCamera(camera, 800, 600, false);
+        #endif
+
+        if (!used) {
             throw new std::runtime_error(std::format("Failed to use Camera {}", camera->id()));
         }
 
         Font font("Roboto", 24);
         font.setColor(Color::purple());
 
-        // logger.warn("{}", (void*) Camera::getTexture());
-
-        while (renderer->update()) {
-            // this is ok cause render jobs get cleared from memory by the renderer
+        Button button;
+        button.onPressed([this]() {
+            this->logger.log("Button pressed!");
+        });
+        
+        while (this->platform->update()) {
+            // this is ok cause render jobs get cleared from memory by the platform
             RenderJob* texJob = new RenderTextureJob(Camera::getTexture(), {0, 0}, TextureFitMode::FILL);
-            renderer->addJob(texJob);
+            platform->addJob(texJob);
 
             RenderJob* job = new RenderTextJob("test", font, {10, 10});
-            renderer->addJob(job);
+            this->platform->addJob(job);
             
-            renderer->render(); // the renderer performs queued up jobs
+            this->platform->render(); // the platform performs queued up jobs
         }
 
         Camera::end();
-        delete renderer;
+        delete platform;
     }
 }

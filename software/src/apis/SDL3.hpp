@@ -1,16 +1,16 @@
 #pragma once
 #include <iostream>
 #include <graphics/Texture.hpp>
-#include <graphics/Renderer.hpp>
+#include <platform/Platform.hpp>
 #include <util/Logger.hpp>
 
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
 namespace stanza {
-    class SDL3Renderer: public Renderer {
+    class PlatformSDL3: public Platform {
     private:
-        SDL_Renderer* renderer;
+        SDL_Renderer* platform;
         SDL_Window* window;
         SDL_Event event;
 
@@ -27,8 +27,8 @@ namespace stanza {
         Texture loadTexture(const std::string name) override;
         bool renderTexture(Texture* texture, Point at, TextureFitMode mode) override;
 
-        SDL3Renderer(int width, int height);
-        SDL3Renderer();
-        ~SDL3Renderer();
+        PlatformSDL3(int width, int height);
+        PlatformSDL3();
+        ~PlatformSDL3();
     };
 };

@@ -1,8 +1,8 @@
-#include <graphics/api/SDL3.hpp>
+#include <apis/SDL3.hpp>
 
 namespace stanza {
-    void SDL3Renderer::init(int width, int height) {
-        #ifdef __arm__ // assume we're compiling on rpi
+    void PlatformSDL3::init(int width, int height) {
+        #ifdef PLATFORM_PI // assume we're compiling on rpi
         SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "kmsdrm");
         SDL_SetHint(SDL_HINT_KMSDRM_REQUIRE_DRM_MASTER, "0");
         #endif
@@ -19,58 +19,83 @@ namespace stanza {
 
         logger.log("Initialized SDL3 backend.");
 
-        this->window = SDL_CreateWindow("SDL3 Renderer", width, height, SDL_WINDOW_RESIZABLE);
-        this->renderer = SDL_CreateRenderer(this->window, NULL);
+        this->window = SDL_CreateWindow("SDL3 Platform", width, height, SDL_WINDOW_RESIZABLE);
+        this->platform = SDL_CreateRenderer(this->window, NULL);
     }
 
-    SDL3Renderer::SDL3Renderer(int width, int height) : logger("SDL3Renderer") {
+    PlatformSDL3::PlatformSDL3(int width, int height) : logger("PlatformSDL3") {
         this->init(width, height);
     }
 
-    SDL3Renderer::SDL3Renderer() : logger("SDL3Renderer") {
+    PlatformSDL3::PlatformSDL3() : logger("PlatformSDL3") {
         this->init(480, 320);
     }
 
-    SDL3Renderer::~SDL3Renderer() {
+    PlatformSDL3::~PlatformSDL3() {
         logger.log("Cleaning up SDL3...");
         
         TTF_Quit();
         SDL_Quit();
     }
 
-    bool SDL3Renderer::update() {
+    bool PlatformSDL3::update() {
         while (SDL_PollEvent(&(this->event))) {
-            if (this->event.type == SDL_EVENT_QUIT) {
-                return false;
+            switch(this->event.type) {
+                case SDL_EVENT_QUIT:
+                    return false;
+                case SDL_EVENT_KEY_DOWN:
+                    this->pressedKey = SDL_GetKeyName(this->event.key.key);
+
+                    if (!this->event.key.repeat) {
+                        for (auto& handler : this->keyDownHandlers) {
+                            if (handler) {
+                                handler(this->pressedKey);
+                            }
+                        }
+                    }
+                    break;
+                case SDL_EVENT_KEY_UP:
+                    this->pressedKey = "";
+
+                    if (!this->event.key.repeat) {
+                        std::string key = SDL_GetKeyName(this->event.key.key);
+
+                        for (auto& handler : this->keyUpHandlers) {
+                            if (handler) {
+                                handler(key);
+                            }
+                        }
+                    }
+                    break;
             }
         }
 
         return true;
     }
 
-    void SDL3Renderer::render() {
+    void PlatformSDL3::render() {
         // clear black by default
-        SDL_SetRenderDrawColor(this->renderer, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(this->platform, 0, 0, 0, 255);
         // enable alpha blending
-        SDL_SetRenderDrawBlendMode(this->renderer, SDL_BLENDMODE_BLEND);
-        SDL_RenderClear(this->renderer);
+        SDL_SetRenderDrawBlendMode(this->platform, SDL_BLENDMODE_BLEND);
+        SDL_RenderClear(this->platform);
 
         // render stuff in queue
         for (auto& job : this->jobs) {
             job->render(this);
         }
 
-        SDL_RenderPresent(this->renderer);
+        SDL_RenderPresent(this->platform);
         this->clearJobs();
     }
 
-    Texture SDL3Renderer::loadTexture(const std::string name) {
+    Texture PlatformSDL3::loadTexture(const std::string name) {
         logger.log("Loading texture \"{}\"", name);
         Texture t(1, 1);
         return t;
     }
 
-    bool SDL3Renderer::renderTexture(Texture* texture, Point at, TextureFitMode mode) {
+    bool PlatformSDL3::renderTexture(Texture* texture, Point at, TextureFitMode mode) {
         if (texture == NULL || texture->getRaw() == NULL) {
             logger.error("Null texture!");
             return false;
@@ -89,7 +114,7 @@ namespace stanza {
             return false;
         }
 
-        SDL_Texture* tex = SDL_CreateTextureFromSurface(this->renderer, surface);
+        SDL_Texture* tex = SDL_CreateTextureFromSurface(this->platform, surface);
         if (tex == NULL) {
             logger.error("Null SDL texture!");
             return false;
@@ -99,10 +124,10 @@ namespace stanza {
         
         switch (mode) {
             case NORMAL:
-                SDL_RenderTexture(this->renderer, tex, NULL, &dst);
+                SDL_RenderTexture(this->platform, tex, NULL, &dst);
                 break;
             case FILL:
-                SDL_RenderTexture(this->renderer, tex, NULL, NULL);
+                SDL_RenderTexture(this->platform, tex, NULL, NULL);
                 break;
             case FIT:
                 throw std::logic_error("TextureFillMode::FIT is not implemented!");
@@ -115,7 +140,7 @@ namespace stanza {
         return true;
     }
 
-    void SDL3Renderer::renderText(Font font, Point at, const std::string text) {
+    void PlatformSDL3::renderText(Font font, Point at, const std::string text) {
         CachedFont* loaded = this->loadFont(font);
         if (!loaded) {
             return;
@@ -128,16 +153,16 @@ namespace stanza {
             .b = font.getColor().b
         });
 
-        SDL_Texture* texture = SDL_CreateTextureFromSurface(this->renderer, surf);
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(this->platform, surf);
         SDL_FRect rect = {at.x, at.y, (float) surf->w, (float) surf->h};
 
-        SDL_RenderTexture(this->renderer, texture, NULL, &rect);
+        SDL_RenderTexture(this->platform, texture, NULL, &rect);
 
         SDL_DestroySurface(surf);
         SDL_DestroyTexture(texture);
     }
 
-    CachedFont* SDL3Renderer::loadFont(Font font) {
+    CachedFont* PlatformSDL3::loadFont(Font font) {
         for (auto& f : this->fontCache) {
             if (f.first == font.getName()) {
                 return &f;

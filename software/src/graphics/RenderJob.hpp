@@ -1,12 +1,13 @@
 #pragma once
 #include <iostream>
-#include <graphics/Renderer.hpp>
 
 namespace stanza {
-    class Renderer;
+    class Platform;
 
     class RenderJob {
     public:
-        virtual void render(Renderer* renderer) = 0;
+        virtual void render(Platform* platform) = 0;
     };
 }
+
+#include <platform/Platform.hpp>

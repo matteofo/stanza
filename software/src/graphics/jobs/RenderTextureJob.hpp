@@ -1,11 +1,13 @@
 #pragma once
 #include <iostream>
-#include <graphics/Renderer.hpp>
 #include <graphics/RenderJob.hpp>
+#include <platform/Platform.hpp>
 #include <graphics/Texture.hpp>
 #include <util/Point.hpp>
 
 namespace stanza {
+    class Platform;
+
     class RenderTextureJob: public RenderJob {
     private:
         Texture* texture;
@@ -18,7 +20,7 @@ namespace stanza {
         Point getPosition();
         void setPosition(Point point);
 
-        void render(Renderer* renderer) override;
+        void render(Platform* platform) override;
 
         RenderTextureJob(Texture* texture);
         RenderTextureJob(Texture* texture, Point position);
