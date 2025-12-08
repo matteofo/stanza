@@ -49,8 +49,8 @@ namespace stanza {
     }
 
     void SDL3Renderer::render() {
-        // clear white by default
-        SDL_SetRenderDrawColor(this->renderer, 255, 255, 255, 255);
+        // clear black by default
+        SDL_SetRenderDrawColor(this->renderer, 0, 0, 0, 255);
         // enable alpha blending
         SDL_SetRenderDrawBlendMode(this->renderer, SDL_BLENDMODE_BLEND);
         SDL_RenderClear(this->renderer);
@@ -68,6 +68,40 @@ namespace stanza {
         logger.log("Loading texture \"{}\"", name);
         Texture t(1, 1);
         return t;
+    }
+
+    bool SDL3Renderer::renderTexture(Texture* texture, Point at) {
+        if (texture == NULL || texture->getRaw() == NULL) {
+            logger.error("Null texture!");
+            return false;
+        }
+
+        SDL_Surface* surface = SDL_CreateSurfaceFrom(
+            texture->getWidth(),
+            texture->getHeight(),
+            SDL_PIXELFORMAT_YUY2,
+            texture->getRaw(),
+            texture->getPitch()
+        );
+
+        if (surface == NULL) {
+            logger.error("Null surface!");
+            return false;
+        }
+
+        SDL_Texture* tex = SDL_CreateTextureFromSurface(this->renderer, surface);
+        if (tex == NULL) {
+            logger.error("Null SDL texture!");
+            return false;
+        }
+
+        SDL_FRect dst = {at.x, at.y, surface->w, surface->h};
+        SDL_RenderTexture(this->renderer, tex, NULL, &dst);
+
+        SDL_DestroySurface(surface);
+        SDL_DestroyTexture(tex);
+
+        return true;
     }
 
     void SDL3Renderer::renderText(Font font, Point at, const std::string text) {

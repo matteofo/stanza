@@ -27,18 +27,21 @@ namespace stanza {
 		static bool ready;
 
 		static Texture* texture;
+		static std::function<void(Texture*)> textureCallback;
 
 		static bool allocateBuffers();
 		static bool requestFrames();
 
 		static void _requestHandler(libcamera::Request* request);	
 
-		static const char* _fourcc(u32 code);	
+		static void _fourcc(char format[5], u32 code);
 	public:
 		static bool init();
 		static void end();
 		
 		static std::optional<std::vector<std::shared_ptr<libcamera::Camera>>> enumerate();
 		static bool useCamera(std::shared_ptr<libcamera::Camera> camera);
+		static Texture* getTexture();
+		static void onFrame(std::function<void(Texture*)> callback);
 	};
 }

@@ -1,9 +1,27 @@
 CC			:= g++
-TARGET		:= camera
-SOURCES		:= src/*.cpp src/*/*.cpp src/*/*/*.cpp
+CCFLAGS		:= -std=c++23
+TARGET		:= ./camera
+
+SOURCES		:= $(shell find ./ -type f -name "*.cpp")
+OBJECTS		:= $(SOURCES:.cpp=.o)
+BUILT		:= $(subst src,build,$(OBJECTS))
 
 INCLUDES	:= $(shell pkg-config --cflags libcamera) -I/opt/homebrew/include -I./src/
 LIBS		:= -L/opt/homebrew/lib -lSDL3 -lSDL3_ttf $(shell pkg-config --libs libcamera)
 
-all:
-	$(CC) $(INCLUDES) -std=c++23 -o $(TARGET) $(SOURCES) $(LIBS) -g
+.PHONY: all
+all: $(TARGET)
+
+$(TARGET): $(BUILT)
+	@ echo Linking...
+	@ $(CC) $(INCLUDES) $(CCFLAGS) -o $(TARGET) $(BUILT) $(LIBS) -g
+
+build/%.o: src/%.cpp
+	@ echo Building $@...
+	@ mkdir -p ./build
+	@ mkdir -p $(dir $@)
+	@ $(CC) $(INCLUDES) $(CCFLAGS) -c $< -o $(subst src,build,$@)
+
+clean:
+	@ rm -rf ./build
+	@ echo Cleaned build files.

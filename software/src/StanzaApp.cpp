@@ -2,7 +2,7 @@
 
 namespace stanza {
     StanzaApp::StanzaApp() : logger("StanzaApp") {
-        this->renderer = new SDL3Renderer();
+        this->renderer = new SDL3Renderer(1920, 1080);
     }
 
     void StanzaApp::run() {
@@ -25,14 +25,24 @@ namespace stanza {
         if (!Camera::useCamera(camera)) {
             throw new std::runtime_error(std::format("Failed to use Camera {}", camera->id()));
         }
+        
+        Camera::onFrame([this](Texture* tex) {
+            
+        });
 
         Font font("Roboto", 24);
         font.setColor(Color::purple());
 
+        // logger.warn("{}", (void*) Camera::getTexture());
+
         while (renderer->update()) {
             // this is ok cause render jobs get cleared from memory by the renderer
+            RenderJob* texJob = new RenderTextureJob(Camera::getTexture(), {0, 0});
+            renderer->addJob(texJob);
+
             RenderJob* job = new RenderTextJob("test", font, {10, 10});
             renderer->addJob(job);
+            
             renderer->render(); // the renderer performs queued up jobs
         }
 

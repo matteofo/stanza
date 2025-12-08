@@ -11,6 +11,7 @@ namespace stanza {
     Logger Camera::logger;
     bool Camera::ready;
     Texture* Camera::texture;
+    std::function<void(Texture*)> Camera::textureCallback;
 
     bool Camera::init() {
         setenv("LIBCAMERA_LOG_LEVELS", "ERROR", false);
@@ -80,25 +81,25 @@ namespace stanza {
             return false;
         }
 
+        char format[5];
         libcamera::StreamConfiguration& streamConfig = Camera::_config->at(0);
-        streamConfig.pixelFormat = streamConfig.pixelFormat.fromString("RGB888");
-        logger.warn("IS VALID: {}, {}", Camera::_fourcc(streamConfig.pixelFormat.fourcc()), streamConfig.pixelFormat.isValid());
+        streamConfig.pixelFormat = libcamera::formats::YUYV;
 
         Camera::_config->validate();
 
-        const char* format = Camera::_fourcc(streamConfig.pixelFormat.fourcc());
+        Camera::_fourcc(format, streamConfig.pixelFormat.fourcc());
         logger.log("Validated camera configuration ({}): {}", format, streamConfig.toString());
         Camera::_camera->configure(Camera::_config.get());
 
         u32 width = streamConfig.size.width, height = streamConfig.size.height;
-        unsigned int stride = streamConfig.stride;
-        Camera::texture = new Texture(width, height, stride);
+        unsigned int depth = streamConfig.stride / width;
+        Camera::texture = new Texture(width, height, depth);
         if (!Camera::texture) {
             logger.error("Failed to allocate texture of size {}x{}!", height, width);
             return false;
         }
 
-        logger.log("Allocated texture of size {}x{}, {} bpp", width, height, stride);
+        logger.log("Allocated texture of size {}x{}, {} Bpp", width, height, depth);
 
         return Camera::allocateBuffers();
     }
@@ -169,13 +170,17 @@ namespace stanza {
                 void* planeData = mmap(nullptr, plane.length,
                     PROT_READ | PROT_WRITE, MAP_SHARED, plane.fd.get(), plane.offset);
 
-                if (!planeData) {
+                if (planeData == NULL) {
                     logger.error("Failed to mmap() a buffer plane!");
                     continue;
                 }
 
-                // logger.log("Plane length: {}", plane.length);
-
+                if (!texture->blit(planeData, plane.length)) {
+                    logger.error("Failed to blit texture data!");
+                } else {
+                    Camera::textureCallback(Camera::texture);
+                }
+                
                 munmap(planeData, plane.length);
             }
         }
@@ -186,14 +191,17 @@ namespace stanza {
         Camera::_camera->queueRequest(request);
     }
 
-    const char* Camera::_fourcc(u32 code) {
-        std::string format;
+    void Camera::_fourcc(char format[5], u32 code) {
         for (int i = 3; i >= 0; i--) {
-            format += (char) (code >> (8 * i)) & 0xff;
+            format[i] = (code >> (8 * i)) & 0xff;
         }
+    }
 
-        logger.warn("{}", format);
-
-        return format.c_str();
+    void Camera::onFrame(std::function<void(Texture*)> callback) {
+        Camera::textureCallback = callback;
+    }
+    
+    Texture* Camera::getTexture() {
+        return Camera::texture;
     }
 }

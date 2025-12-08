@@ -3,6 +3,7 @@
 #include <graphics/Renderer.hpp>
 #include <graphics/api/SDL3.hpp>
 #include <graphics/jobs/RenderTextJob.hpp>
+#include <graphics/jobs/RenderTextureJob.hpp>
 
 #include <camera/Camera.hpp>
 

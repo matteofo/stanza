@@ -5,6 +5,8 @@ namespace stanza {
         switch (format) {
             case RGBA_32:
                 return 4;
+            case YUYV:
+                return 2;
         }
     }
 
@@ -20,42 +22,66 @@ namespace stanza {
         return this->height;
     }
 
-    u64 Texture::getStride() {
-        return this->stride;
+    u64 Texture::getPitch() {
+        return this->pitch;
+    }
+
+    u64 Texture::getDepth() {
+        return this->depth;
     }
 
     PixelFormat Texture::getFormat() {
         return this->format;
     }
 
-    Texture::Texture(u64 width, u64 height, PixelFormat format) {
+    bool Texture::blit(void* source, u64 size) {
+        if (source == NULL) {
+            logger.error("Failed to blit!");
+            return false;
+        }
+
+        memcpy(this->raw, source, size);
+
+        return true;
+    } 
+
+    void Texture::setRaw(void* raw) {
+        if (this->raw) free(this->raw);
+        this->raw = raw;
+    }
+
+    Texture::Texture(u64 width, u64 height, PixelFormat format) : logger("Texture") {
         this->width = width;
         this->height = height;
         this->format = format;
-        this->stride = pixel_format_size(format);
+        this->depth = pixel_format_size(RGBA_32);
+        this->pitch = this->depth * width;
 
-        this->raw = malloc(width * height * this->stride);
+        this->raw = malloc(width * height * this->depth);
     }
 
-    Texture::Texture(u64 width, u64 height, u64 stride) {
+    Texture::Texture(u64 width, u64 height, u64 depth) : logger("Texture") {
         this->width = width;
         this->height = height;
         this->format = OTHER;
-        this->stride = stride;
+        this->depth = depth;
+        this->pitch = depth * width;
         
-        this->raw = malloc(width * height * stride);
+        this->raw = malloc(width * height * depth);
     }
 
-    Texture::Texture(u64 width, u64 height) {
+    Texture::Texture(u64 width, u64 height) : logger("Texture") {
         this->width = width;
         this->height = height;
         this->format = RGBA_32;
-        this->stride = pixel_format_size(RGBA_32);
+        this->depth = pixel_format_size(RGBA_32);
+        this->pitch = this->depth * width;
 
-        this->raw = malloc(width * height * this->stride);
+        this->raw = malloc(width * height * this->depth);
     }
 
     Texture::~Texture() {
+        logger.warn("Deleting texture! {}", this->raw);
         free(this->raw);
     }
 }

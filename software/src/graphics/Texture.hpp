@@ -2,12 +2,16 @@
 #include <iostream>
 #include <vector>
 
+#include <cstring>
+
 #include <util/types.hpp>
+#include <util/Logger.hpp>
 
 namespace stanza {
     enum PixelFormat {
         OTHER,
-        RGBA_32
+        RGBA_32,
+        YUYV
     };
 
     // returns the size (in bytes) of a pixel in the specified format
@@ -16,19 +20,23 @@ namespace stanza {
     class Texture {
     protected:
         void* raw;
-        u64 width, height, stride;
+        u64 width, height, depth, pitch;
         PixelFormat format;
+        Logger logger;
     public:
         void* getRaw();
-        void blit(void* source, u64 size);
+        bool blit(void* source, u64 size);
 
         u64 getWidth();
         u64 getHeight();
-        u64 getStride();
+        u64 getDepth();
+        u64 getPitch();
         PixelFormat getFormat();
 
+        void setRaw(void* raw);
+
         Texture(u64 width, u64 height, PixelFormat format);
-        Texture(u64 width, u64 height, u64 stride);
+        Texture(u64 width, u64 height, u64 depth);
         Texture(u64 width, u64 height);
         ~Texture();
     };

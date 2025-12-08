@@ -11,4 +11,8 @@ namespace stanza {
         }
         this->jobs.clear();
     }
+
+    bool Renderer::renderTexture(Texture* texture) {
+        return this->renderTexture(texture, {0, 0});
+    }
 }

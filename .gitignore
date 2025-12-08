@@ -1,4 +1,6 @@
 .DS_Store
 software/.vscode/
+software/build/
+software/camera
 .vscode/
 *.dSYM

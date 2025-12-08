@@ -31,6 +31,8 @@ namespace stanza {
 
         virtual void renderText(Font font, Point at, const std::string text) = 0;
     
+        virtual bool renderTexture(Texture* texture);
+        virtual bool renderTexture(Texture* texture, Point at) = 0;
         virtual Texture loadTexture(const std::string name) = 0;
     };
 }
