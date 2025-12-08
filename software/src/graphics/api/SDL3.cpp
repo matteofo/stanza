@@ -70,7 +70,7 @@ namespace stanza {
         return t;
     }
 
-    bool SDL3Renderer::renderTexture(Texture* texture, Point at) {
+    bool SDL3Renderer::renderTexture(Texture* texture, Point at, TextureFitMode mode) {
         if (texture == NULL || texture->getRaw() == NULL) {
             logger.error("Null texture!");
             return false;
@@ -96,7 +96,18 @@ namespace stanza {
         }
 
         SDL_FRect dst = {at.x, at.y, surface->w, surface->h};
-        SDL_RenderTexture(this->renderer, tex, NULL, &dst);
+        
+        switch (mode) {
+            case NORMAL:
+                SDL_RenderTexture(this->renderer, tex, NULL, &dst);
+                break;
+            case FILL:
+                SDL_RenderTexture(this->renderer, tex, NULL, NULL);
+                break;
+            case FIT:
+                throw std::logic_error("TextureFillMode::FIT is not implemented!");
+                break;
+        }
 
         SDL_DestroySurface(surface);
         SDL_DestroyTexture(tex);

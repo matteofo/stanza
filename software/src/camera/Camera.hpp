@@ -41,6 +41,7 @@ namespace stanza {
 		
 		static std::optional<std::vector<std::shared_ptr<libcamera::Camera>>> enumerate();
 		static bool useCamera(std::shared_ptr<libcamera::Camera> camera);
+		static bool useCamera(std::shared_ptr<libcamera::Camera> camera, int cameraWidth, int cameraHeight);
 		static Texture* getTexture();
 		static void onFrame(std::function<void(Texture*)> callback);
 	};

@@ -13,6 +13,6 @@ namespace stanza {
     }
 
     bool Renderer::renderTexture(Texture* texture) {
-        return this->renderTexture(texture, {0, 0});
+        return this->renderTexture(texture, {0, 0}, TextureFitMode::NORMAL);
     }
 }

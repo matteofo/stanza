@@ -1,6 +1,7 @@
 #include <camera/Camera.hpp>
 
 namespace stanza {
+    // static variables
     std::shared_ptr<libcamera::Camera> Camera::_camera;
     std::unique_ptr<libcamera::CameraManager> Camera::_mgr;
 	std::unique_ptr<libcamera::CameraConfiguration> Camera::_config;
@@ -66,6 +67,10 @@ namespace stanza {
     }
 
     bool Camera::useCamera(std::shared_ptr<libcamera::Camera> camera) {
+        return Camera::useCamera(camera, -1, -1);
+    }
+
+    bool Camera::useCamera(std::shared_ptr<libcamera::Camera> camera, int cameraWidth, int cameraHeight) {
         Camera::_camera = Camera::_mgr->get(camera->id());
         int acquired = Camera::_camera->acquire();
         if (acquired != 0) {
@@ -84,6 +89,11 @@ namespace stanza {
         char format[5];
         libcamera::StreamConfiguration& streamConfig = Camera::_config->at(0);
         streamConfig.pixelFormat = libcamera::formats::YUYV;
+        
+        if (cameraWidth > 0 && cameraHeight > 0) {
+            streamConfig.size.width = cameraWidth;
+            streamConfig.size.height = cameraHeight;
+        }
 
         Camera::_config->validate();
 
@@ -177,7 +187,7 @@ namespace stanza {
 
                 if (!texture->blit(planeData, plane.length)) {
                     logger.error("Failed to blit texture data!");
-                } else {
+                } else if (Camera::textureCallback) {
                     Camera::textureCallback(Camera::texture);
                 }
                 

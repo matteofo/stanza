@@ -1,8 +1,10 @@
 #pragma once
 #include <iostream>
 #include <vector>
+
 #include <graphics/Texture.hpp>
 #include <graphics/RenderJob.hpp>
+#include <graphics/jobs/RenderTextureJob.hpp>
 #include <gui/Font.hpp>
 #include <util/Point.hpp>
 
@@ -32,7 +34,7 @@ namespace stanza {
         virtual void renderText(Font font, Point at, const std::string text) = 0;
     
         virtual bool renderTexture(Texture* texture);
-        virtual bool renderTexture(Texture* texture, Point at) = 0;
+        virtual bool renderTexture(Texture* texture, Point at, TextureFitMode mode) = 0;
         virtual Texture loadTexture(const std::string name) = 0;
     };
 }

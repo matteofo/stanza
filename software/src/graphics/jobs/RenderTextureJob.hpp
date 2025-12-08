@@ -10,8 +10,18 @@ namespace stanza {
     private:
         Texture* texture;
         Point position;
+        TextureFitMode mode;
     public:
+        TextureFitMode getFitMode();
+        void setFitMode(TextureFitMode mode);
+
+        Point getPosition();
+        void setPosition(Point point);
+
         void render(Renderer* renderer) override;
+
+        RenderTextureJob(Texture* texture);
         RenderTextureJob(Texture* texture, Point position);
+        RenderTextureJob(Texture* texture, Point position, TextureFitMode mode);
     };
 }

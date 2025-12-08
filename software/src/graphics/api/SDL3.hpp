@@ -25,7 +25,7 @@ namespace stanza {
         void renderText(Font font, Point at, const std::string text) override;
 
         Texture loadTexture(const std::string name) override;
-        bool renderTexture(Texture* texture, Point at) override;
+        bool renderTexture(Texture* texture, Point at, TextureFitMode mode) override;
 
         SDL3Renderer(int width, int height);
         SDL3Renderer();

@@ -14,6 +14,12 @@ namespace stanza {
         YUYV
     };
 
+    enum TextureFitMode {
+        NORMAL,
+        FILL,
+        FIT
+    };
+
     // returns the size (in bytes) of a pixel in the specified format
     u8 pixel_format_size(PixelFormat format);
 
