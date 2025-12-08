@@ -9,7 +9,7 @@
 #include <gui/Font.hpp>
 #include <util/Point.hpp>
 
-#ifdef __arm__
+#ifdef __aarch64__
 #define PLATFORM_PI
 #else
 #define PLATFORM_PC
