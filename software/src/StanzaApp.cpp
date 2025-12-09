@@ -25,7 +25,7 @@ namespace stanza {
         // sets up the camera, framebuffers and frame requests
         bool used = false;
         #ifdef PLATFORM_PI
-        used = Camera::useCamera(camera, 3264 / 2, 2448 / 2, true);
+        used = Camera::useCamera(camera, 3264 / 2, 2448 / 2, false);
         #else
         used = Camera::useCamera(camera, 1920, 1080, false);
         #endif
