@@ -230,10 +230,10 @@ namespace stanza {
             for (int j = 0; j < fcount; j++) {
                 _p.x = viewport.x - (viewport.x * fingers[j]->x);
                 _p.y = viewport.y * fingers[j]->y;
+                p = _p;
             }
         }
 
-        p = _p;
         return p;
         #else
         Point _p;
