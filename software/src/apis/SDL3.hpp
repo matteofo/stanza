@@ -18,9 +18,16 @@ namespace stanza {
 
         void init(int width, int height);
         virtual CachedFont* loadFont(Font font) override;
+
+        SDL_TouchID* sdlTouchDevices;
+        int sdlTouchDeviceCount;
     public:
         bool update() override;
         void render() override;
+
+        Point getViewport() override;
+
+        std::optional<Point> getTouchPoint() override;
 
         void renderText(Font font, Point at, const std::string text) override;
 

@@ -33,6 +33,9 @@ namespace stanza {
         std::vector<std::function<void(std::string code)>> keyDownHandlers;
         std::vector<std::function<void(std::string code)>> keyUpHandlers;
         std::string pressedKey;
+
+        std::vector<std::function<void(Point)>> touchHandlers;
+        bool lastTouch;
     public:
         void addJob(RenderJob* job);
         void clearJobs();
@@ -41,16 +44,21 @@ namespace stanza {
         void onKeyUp(std::function<void(std::string)> handler);
         const std::string getPressedKey();
 
+        void onTouch(std::function<void(Point)> handler);
+        virtual std::optional<Point> getTouchPoint() = 0;
+
         virtual ~Platform() = default;
 
         // return false if the application should close
         virtual bool update() = 0;
         virtual void render() = 0;
 
+        virtual Point getViewport() = 0;
+
         virtual void renderText(Font font, Point at, const std::string text) = 0;
     
-        virtual bool renderTexture(Texture* texture);
+        bool renderTexture(Texture* texture);
         virtual bool renderTexture(Texture* texture, Point at, TextureFitMode mode) = 0;
-        virtual Texture loadTexture(const std::string name) = 0;\
+        virtual Texture loadTexture(const std::string name) = 0;
     };
 }

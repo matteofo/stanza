@@ -3,6 +3,7 @@
 
 #include <platform/Platform.hpp>
 #include <platform/Button.hpp>
+#include <platform/Storage.hpp>
 #include <apis/SDL3.hpp>
 #include <graphics/jobs/RenderTextJob.hpp>
 #include <graphics/jobs/RenderTextureJob.hpp>

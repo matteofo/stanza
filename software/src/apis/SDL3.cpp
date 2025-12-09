@@ -21,6 +21,8 @@ namespace stanza {
 
         this->window = SDL_CreateWindow("SDL3 Platform", width, height, SDL_WINDOW_RESIZABLE);
         this->platform = SDL_CreateRenderer(this->window, NULL);
+
+        this->sdlTouchDevices = SDL_GetTouchDevices(&(this->sdlTouchDeviceCount));
     }
 
     PlatformSDL3::PlatformSDL3(int width, int height) : logger("PlatformSDL3") {
@@ -36,6 +38,13 @@ namespace stanza {
         
         TTF_Quit();
         SDL_Quit();
+    }
+
+    Point PlatformSDL3::getViewport() {
+        int x = 0, y = 0;
+        SDL_GetWindowSizeInPixels(this->window, &x, &y);
+
+        return {(float) x, (float) y};
     }
 
     bool PlatformSDL3::update() {
@@ -68,6 +77,19 @@ namespace stanza {
                     }
                     break;
             }
+        }
+
+        std::optional<Point> touch = this->getTouchPoint();
+        if (touch.has_value()) {
+            for (auto& handler : this->touchHandlers) {
+                if (handler && !this->lastTouch) {
+                    handler(touch.value());
+                }
+            }
+
+            this->lastTouch = true;
+        } else {
+            this->lastTouch = false;
         }
 
         return true;
@@ -120,7 +142,7 @@ namespace stanza {
             return false;
         }
 
-        SDL_FRect dst = {at.x, at.y, surface->w, surface->h};
+        SDL_FRect dst = {at.x, at.y, (float) surface->w, (float) surface->h};
         
         switch (mode) {
             case NORMAL:
@@ -150,7 +172,8 @@ namespace stanza {
         SDL_Surface* surf = TTF_RenderText_Blended(sdlFont, text.c_str(), 0, {
             .r = font.getColor().r,
             .g = font.getColor().g,
-            .b = font.getColor().b
+            .b = font.getColor().b,
+            .a = font.getColor().a
         });
 
         SDL_Texture* texture = SDL_CreateTextureFromSurface(this->platform, surf);
@@ -185,5 +208,39 @@ namespace stanza {
 
         this->fontCache.push_back(entry);
         return &this->fontCache[this->fontCache.size() - 1];
+    }
+
+    std::optional<Point> PlatformSDL3::getTouchPoint() {
+        std::optional<Point> p;
+
+        #ifdef PLATFORM_PI
+        Point _p;
+        Point viewport = this->getViewport();
+        
+        for (int i = 0; i < this->sdlTouchDeviceCount; i++) {
+            int fcount = 0;
+            SDL_Finger** fingers = SDL_GetTouchFingers(
+                this->sdlTouchDevices[i], &fcount
+            );
+
+            for (int j = 0; j < fcount; j++) {
+                _p.x = viewport.x - (viewport.x * fingers[j]->x);
+                _p.y = viewport.y * fingers[j]->y;
+            }
+        }
+
+        p = _p;
+        return p;
+        #else
+        Point _p;
+        u32 button = SDL_GetMouseState(&(_p.x), &(_p.y));
+        if (!(button & SDL_BUTTON_MASK(SDL_BUTTON_LEFT))) {
+            return std::nullopt;
+        }
+
+        p = _p;
+        #endif
+
+        return p;
     }
 }

@@ -21,13 +21,13 @@ namespace stanza {
         }
         
         std::shared_ptr<libcamera::Camera> camera = cameras.value()[0];
-        // sets up the camera, framebuffers and frame requests
 
+        // sets up the camera, framebuffers and frame requests
         bool used = false;
         #ifdef PLATORM_PI
         used = Camera::useCamera(camera, 3264 / 2, 2448 / 2, true)
         #else
-        used = Camera::useCamera(camera, 800, 600, false);
+        used = Camera::useCamera(camera, 1920, 1080, false);
         #endif
 
         if (!used) {
@@ -40,6 +40,11 @@ namespace stanza {
         Button button;
         button.onPressed([this]() {
             this->logger.log("Button pressed!");
+        });
+
+        platform->onTouch([this](Point touch) {
+            logger.log("Touch: {} {}", touch.x, touch.y);
+            Storage::storeImage(Camera::getTexture());
         });
         
         while (this->platform->update()) {

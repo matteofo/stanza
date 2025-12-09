@@ -6,8 +6,8 @@ SOURCES		:= $(shell find ./ -type f -name "*.cpp")
 OBJECTS		:= $(SOURCES:.cpp=.o)
 BUILT		:= $(subst src,build,$(OBJECTS))
 
-INCLUDES	:= $(shell pkg-config --cflags libcamera) -I/opt/homebrew/include -I./src/
-LIBS		:= -L/opt/homebrew/lib -lSDL3 -lSDL3_ttf $(shell pkg-config --libs libcamera)
+INCLUDES	:= $(shell pkg-config --cflags libcamera) $(shell pkg-config --cflags opencv4) -I/opt/homebrew/include -I./src/
+LIBS		:= -L/opt/homebrew/lib -lSDL3 -lSDL3_ttf -lturbojpeg $(shell pkg-config --libs libcamera) $(shell pkg-config --libs opencv4)
 
 .PHONY: all
 all: $(TARGET)

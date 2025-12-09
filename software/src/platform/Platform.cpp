@@ -24,6 +24,10 @@ namespace stanza {
         this->keyUpHandlers.push_back(handler);
     }
 
+    void Platform::onTouch(std::function<void(Point)> handler) {
+        this->touchHandlers.push_back(handler);
+    }
+
     const std::string Platform::getPressedKey() {
         return this->pressedKey;
     }

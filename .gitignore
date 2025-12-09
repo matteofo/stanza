@@ -4,3 +4,5 @@ software/build/
 software/camera
 .vscode/
 *.dSYM
+*.jpeg
+*.jpg

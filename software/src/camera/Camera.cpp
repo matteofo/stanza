@@ -98,7 +98,7 @@ namespace stanza {
         Camera::_config->validate();
         Camera::_fourcc(format, streamConfig.pixelFormat.fourcc());
         logger.log("Validated camera configuration ({}): {}", format, streamConfig.toString());
-        
+
         if (rotate)
             Camera::_config->orientation = libcamera::Orientation::Rotate180Mirror;
 
