@@ -22,7 +22,9 @@ namespace stanza {
         this->window = SDL_CreateWindow("SDL3 Platform", width, height, SDL_WINDOW_RESIZABLE);
         this->platform = SDL_CreateRenderer(this->window, NULL);
 
-        this->sdlTouchDevices = SDL_GetTouchDevices(&(this->sdlTouchDeviceCount));
+        int count = 0;
+        this->sdlTouchDevices = SDL_GetTouchDevices(&count);
+        this->sdlTouchDeviceCount = count;
     }
 
     PlatformSDL3::PlatformSDL3(int width, int height) : logger("PlatformSDL3") {
@@ -211,7 +213,7 @@ namespace stanza {
     }
 
     std::optional<Point> PlatformSDL3::getTouchPoint() {
-        std::optional<Point> p;
+        std::optional<Point> p = std::nullopt;
 
         #ifdef PLATFORM_PI
         Point _p;
@@ -222,6 +224,8 @@ namespace stanza {
             SDL_Finger** fingers = SDL_GetTouchFingers(
                 this->sdlTouchDevices[i], &fcount
             );
+
+            if (fcount < 1) continue;
 
             for (int j = 0; j < fcount; j++) {
                 _p.x = viewport.x - (viewport.x * fingers[j]->x);
