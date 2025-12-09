@@ -1,5 +1,5 @@
 CC			:= g++
-CCFLAGS		:= -std=c++23
+CCFLAGS		:= -std=c++23 -Wnodeprecated-enum-enum-conversion
 TARGET		:= ./camera
 
 SOURCES		:= $(shell find ./ -type f -name "*.cpp")
@@ -8,6 +8,10 @@ BUILT		:= $(subst src,build,$(OBJECTS))
 
 INCLUDES	:= $(shell pkg-config --cflags libcamera) $(shell pkg-config --cflags opencv4) -I/opt/homebrew/include -I./src/
 LIBS		:= -L/opt/homebrew/lib -lSDL3 -lSDL3_ttf -lturbojpeg $(shell pkg-config --libs libcamera) $(shell pkg-config --libs opencv4)
+
+ifeq ($(shell uname -m),aarch64)
+LIBS		+= -lwiringPi
+endif
 
 .PHONY: all
 all: $(TARGET)
