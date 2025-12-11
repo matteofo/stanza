@@ -1,0 +1,20 @@
+#pragma once
+#include <iostream>
+#include <gui/View.hpp>
+#include <gui/Font.hpp>
+#include <graphics/jobs/RenderTextJob.hpp>
+
+namespace stanza {
+    class Text: public View {
+    private:
+        std::string text;
+        Font* font;
+    public:
+        void setText(const std::string text);
+        const std::string getText();
+
+        void render(Platform* platform, Point at) override;
+
+        Text(const std::string text, Font font);
+    };
+}

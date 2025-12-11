@@ -56,7 +56,8 @@ namespace stanza {
         virtual Point getViewport() = 0;
 
         virtual void renderText(Font font, Point at, const std::string text) = 0;
-    
+        virtual Point getTextSize(Font font, const std::string text) = 0;
+
         bool renderTexture(Texture* texture);
         virtual bool renderTexture(Texture* texture, Point at, TextureFitMode mode) = 0;
         virtual Texture loadTexture(const std::string name) = 0;

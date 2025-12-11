@@ -37,6 +37,9 @@ namespace stanza {
         Font font("Roboto", 24);
         font.setColor(Color::purple());
 
+        Font font2("Roboto", 24, FontWeight::BOLD);
+        font2.setColor(Color::yellow());
+
         Button button;
         button.onPressed([this]() {
             this->logger.log("Button pressed!");
@@ -46,14 +49,27 @@ namespace stanza {
             logger.log("Touch: {} {}", touch.x, touch.y);
             Storage::storeImage(Camera::getTexture());
         });
-        
+
+        Block* block = new Block();
+        block->setSize({480, 320});
+
+        for (int i = 0; i < 100; i++) {
+            View* text;
+            if (i % 2 == 0)
+                text = new Text("ho", font2);
+            else
+                text = new Text("hi", font);
+
+            block->addChild(text);
+        }
+
         while (this->platform->update()) {
             // this is ok cause render jobs get cleared from memory by the platform
             RenderJob* texJob = new RenderTextureJob(Camera::getTexture(), {0, 0}, TextureFitMode::FILL);
             platform->addJob(texJob);
 
-            RenderJob* job = new RenderTextJob("test", font, {10, 10});
-            this->platform->addJob(job);
+            block->setSize(platform->getViewport());
+            block->render(platform, {0, 0});
             
             this->platform->render(); // the platform performs queued up jobs
         }

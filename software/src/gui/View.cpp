@@ -18,6 +18,15 @@ namespace stanza {
         return this->children;
     }
 
+    void View::setSize(Point size) {
+        this->size.x = size.x;
+        this->size.y = size.y;
+    }
+
+    Point View::getSize() {
+        return this->size;
+    }
+
     View* View::getParent() {
         return this->parent;
     }

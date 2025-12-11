@@ -167,7 +167,8 @@ namespace stanza {
     void PlatformSDL3::renderText(Font font, Point at, const std::string text) {
         CachedFont* loaded = this->loadFont(font);
         if (!loaded) {
-            return;
+            logger.error("Failed to load font {} {}!", font.getName(), stanza::to_string(font.getWeight()));
+            throw std::runtime_error("Failed to load a font.");
         }
 
         TTF_Font* sdlFont = (TTF_Font*) loaded->second;
@@ -187,14 +188,37 @@ namespace stanza {
         SDL_DestroyTexture(texture);
     }
 
+    Point PlatformSDL3::getTextSize(Font font, const std::string text) {
+        Point p;
+
+        CachedFont* loaded = this->loadFont(font);
+        if (!loaded) {
+            logger.error("Failed to load font {} {}!", font.getName(), stanza::to_string(font.getWeight()));
+            throw std::runtime_error("Failed to load a font!");
+        }
+
+        TTF_Font* sdlFont = (TTF_Font*) loaded->second;
+
+        int w = 0, h = 0;
+        if (!TTF_GetStringSize(sdlFont, text.c_str(), 0, &w, &h)) {
+            logger.error("Failed to calculate text length!");
+            throw std::runtime_error("Failed to calculate text length!");
+        }
+
+        p.x = (float) w;
+        p.y = (float) h;
+
+        return p;
+    }
+
     CachedFont* PlatformSDL3::loadFont(Font font) {
         for (auto& f : this->fontCache) {
-            if (f.first == font.getName()) {
+            if (f.first == font.getName() + "-" + stanza::to_string(font.getWeight())) {
                 return &f;
             }
         }
 
-        logger.log("Loading font {}", font.getName());
+        logger.log("Loading font {}-{}", font.getName(), stanza::to_string(font.getWeight()));
 
         std::string fontPath = std::format("./res/fonts/{}-{}.ttf", font.getName(), stanza::to_string(font.getWeight()));
         TTF_Font* sdlFont = TTF_OpenFont(fontPath.c_str(), font.getSize());
@@ -205,7 +229,7 @@ namespace stanza {
         }
 
         CachedFont entry;
-        entry.first = font.getName();
+        entry.first = font.getName() + "-" + stanza::to_string(font.getWeight());
         entry.second = sdlFont;
 
         this->fontCache.push_back(entry);

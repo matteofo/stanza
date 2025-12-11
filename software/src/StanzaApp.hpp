@@ -9,6 +9,8 @@
 #include <graphics/jobs/RenderTextureJob.hpp>
 #include <camera/Camera.hpp>
 #include <util/Logger.hpp>
+#include <gui/views/Block.hpp>
+#include <gui/views/Text.hpp>
 
 namespace stanza {
     class StanzaApp {

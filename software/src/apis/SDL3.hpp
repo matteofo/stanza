@@ -30,6 +30,7 @@ namespace stanza {
         std::optional<Point> getTouchPoint() override;
 
         void renderText(Font font, Point at, const std::string text) override;
+        Point getTextSize(Font font, const std::string text) override;
 
         Texture loadTexture(const std::string name) override;
         bool renderTexture(Texture* texture, Point at, TextureFitMode mode) override;
