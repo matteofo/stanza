@@ -13,15 +13,17 @@ namespace stanza {
         Point size;
         Point position;
     public:
-        void addChild(View* child);
-        void removeChild(View* child);
+        virtual void addChild(View* child);
+        virtual void removeChild(View* child);
         const std::vector<View*> getChildren();
 
-        Point getSize();
-        void setSize(Point size);
+        virtual Point getSize();
+        virtual void setSize(Point size);
 
-        View* getParent();
+        virtual View* getParent();
 
-        virtual void render(Platform* platform, Point at) = 0;
+        virtual void render(Point at) = 0;
     };
 }
+
+#include <StanzaApp.hpp>

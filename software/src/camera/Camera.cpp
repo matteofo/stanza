@@ -217,4 +217,11 @@ namespace stanza {
     Texture* Camera::getTexture() {
         return Camera::texture;
     }
+
+    const libcamera::ControlInfoMap& Camera::getControls() {
+        return Camera::_camera->controls();
+    }
+
+    //template<typename T, typename V>
+    //void Camera::setControl(const libcamera::Control<T> &ctrl, const V& value)
 }

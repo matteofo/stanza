@@ -1,8 +1,15 @@
 #include <StanzaApp.hpp>
 
 namespace stanza {
+    Platform* StanzaApp::globalPlatform;
+
     StanzaApp::StanzaApp() : logger("StanzaApp") {
         this->platform = new PlatformSDL3();
+        StanzaApp::globalPlatform = this->platform;
+    }
+
+    Platform* StanzaApp::getPlatform() {
+        return StanzaApp::globalPlatform;
     }
 
     void StanzaApp::run() {
@@ -53,15 +60,20 @@ namespace stanza {
         Block* block = new Block();
         block->setSize({480, 320});
 
+        logger.warn("{} {} {}", font.getColor().r, font.getColor().g, font.getColor().b);
+        logger.warn("{} {} {}", font2.getColor().r, font2.getColor().g, font2.getColor().b);
+
         for (int i = 0; i < 100; i++) {
             View* text;
             if (i % 2 == 0)
-                text = new Text("ho", font2);
+                text = new Text("ho", &font2);
             else
-                text = new Text("hi", font);
+                text = new Text("hi", &font);
 
             block->addChild(text);
         }
+
+        Camera::setControl(libcamera::controls::ExposureValue, 100000);
 
         while (this->platform->update()) {
             // this is ok cause render jobs get cleared from memory by the platform
@@ -69,8 +81,8 @@ namespace stanza {
             platform->addJob(texJob);
 
             block->setSize(platform->getViewport());
-            block->render(platform, {0, 0});
-            
+            block->render({0, 0});
+
             this->platform->render(); // the platform performs queued up jobs
         }
 

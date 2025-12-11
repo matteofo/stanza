@@ -44,4 +44,6 @@ namespace stanza {
             return {255, 0, 255, 255};
         }
     };
+
+    std::string to_string(Color color);
 }

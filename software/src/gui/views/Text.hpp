@@ -13,8 +13,10 @@ namespace stanza {
         void setText(const std::string text);
         const std::string getText();
 
-        void render(Platform* platform, Point at) override;
+        Point getSize() override;
 
-        Text(const std::string text, Font font);
+        void render(Point at) override;
+
+        Text(const std::string text, Font* font);
     };
 }

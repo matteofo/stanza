@@ -13,7 +13,6 @@
 #define PLATFORM_PI
 #else
 #define PLATFORM_PC
-#warning "Compiling for PC"
 #endif
 
 namespace stanza {

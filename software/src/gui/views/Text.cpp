@@ -9,15 +9,19 @@ namespace stanza {
         return this->text;
     }
 
-    Text::Text(const std::string text, Font font) {     
+    Text::Text(const std::string text, Font* font) {     
         this->text = text;
-        this->font = &font;
+        this->font = font;
         this->size = {0, 0};
     }
 
-    void Text::render(Platform* platform, Point at) {
-        this->size = platform->getTextSize(*(this->font), this->text);
+    Point Text::getSize() {
+        return StanzaApp::getPlatform()->getTextSize(*(this->font), this->text);
+    }
+
+    void Text::render(Point at) {
+        this->size = StanzaApp::getPlatform()->getTextSize(*(this->font), this->text);
         RenderJob* job = new RenderTextJob(this->text, *(this->font), at);
-        platform->addJob(job);
+        StanzaApp::getPlatform()->addJob(job);
     }
 }

@@ -39,10 +39,23 @@ namespace stanza {
 		static bool init();
 		static void end();
 		
+		
 		static std::optional<std::vector<std::shared_ptr<libcamera::Camera>>> enumerate();
+		
 		static bool useCamera(std::shared_ptr<libcamera::Camera> camera);
 		static bool useCamera(std::shared_ptr<libcamera::Camera> camera, int cameraWidth, int cameraHeight, bool rotate);
+		
 		static Texture* getTexture();
 		static void onFrame(std::function<void(Texture*)> callback);
+
+		
+		static const libcamera::ControlInfoMap& getControls();
+		
+		template<typename T, typename V>
+		static void setControl(const libcamera::Control<T> &ctrl, const V& value)  {
+			for (auto& request : Camera::_requests) {
+				request->controls().set(ctrl, value);
+			}
+    	}
 	};
 }

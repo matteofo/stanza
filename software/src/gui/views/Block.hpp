@@ -10,7 +10,7 @@ namespace stanza {
         float getPadding();
         void setPadding(float px);
 
-        void render(Platform* platform, Point at) override;
+        void render(Point at) override;
 
         Block();
         Block(float padding);
