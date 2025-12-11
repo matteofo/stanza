@@ -8,6 +8,8 @@ namespace stanza {
             case YUYV:
                 return 2;
         }
+
+        return 0;
     }
 
     void* Texture::getRaw() {

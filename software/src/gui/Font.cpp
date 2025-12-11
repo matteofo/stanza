@@ -16,6 +16,8 @@ namespace stanza {
             case BOLD:
                 return "Bold";
         }
+
+        return "";
     }
 
     unsigned int Font::getSize() {

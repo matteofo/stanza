@@ -1,6 +1,6 @@
 #pragma once
-#include <iostream>
 
+#include <iostream>
 #include <platform/Platform.hpp>
 #include <platform/Button.hpp>
 #include <platform/Storage.hpp>
@@ -11,18 +11,16 @@
 #include <util/Logger.hpp>
 #include <gui/views/Block.hpp>
 #include <gui/views/Text.hpp>
-#include <gui/views/CameraView.hpp>
 
 namespace stanza {
-    class StanzaApp {
+    class CameraView: public View {
     private:
-        static Platform* globalPlatform;
-        Platform* platform;
         Logger logger;
+        Block* block;
     public:
-        void run();
-        StanzaApp();
+        CameraView();
+        ~CameraView();
 
-        static Platform* getPlatform();
+        void render(Point at) override;
     };
 }

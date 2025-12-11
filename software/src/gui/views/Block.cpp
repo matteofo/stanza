@@ -11,7 +11,6 @@ namespace stanza {
 
     void Block::render(Point at) {
         Point pos = {this->padding, this->padding};
-        float step = 0;
 
         for (auto& child : this->children) {
             Point cs = child->getSize();

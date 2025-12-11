@@ -23,6 +23,9 @@ namespace stanza {
         virtual View* getParent();
 
         virtual void render(Point at) = 0;
+        virtual void render();
+
+        virtual ~View();
     };
 }
 

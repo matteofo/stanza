@@ -15,7 +15,7 @@ namespace stanza {
     std::function<void(Texture*)> Camera::textureCallback;
 
     bool Camera::init() {
-        setenv("LIBCAMERA_LOG_LEVELS", "ERROR", false);
+        setenv("LIBCAMERA_LOG_LEVELS", "FATAL", false);
 
         Camera::ready = false;
         logger.setClassName("Camera");
@@ -177,7 +177,6 @@ namespace stanza {
         const std::map<const libcamera::Stream*, libcamera::FrameBuffer*> &buffers = request->buffers();
         for (auto bufferPair : buffers) {
             libcamera::FrameBuffer* buffer = bufferPair.second;
-            const libcamera::FrameMetadata &metadata = buffer->metadata();
 
             for (const auto& plane : buffer->planes()) {
                 void* planeData = mmap(nullptr, plane.length,

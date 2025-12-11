@@ -1,5 +1,5 @@
 CC			:= g++
-CCFLAGS		:= -std=c++23 -Wno-deprecated-enum-enum-conversion
+CCFLAGS		:= -std=c++23 -Wno-deprecated-enum-enum-conversion -Wunused-variable
 TARGET		:= ./camera
 
 SOURCES		:= $(shell find ./ -type f -name "*.cpp")

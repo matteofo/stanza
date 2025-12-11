@@ -30,4 +30,14 @@ namespace stanza {
     View* View::getParent() {
         return this->parent;
     }
+
+    View::~View() {
+        for (auto& child : this->children) {
+            delete child;
+        }
+    }
+
+    void View::render() {
+        this->render({0, 0});
+    }
 }
