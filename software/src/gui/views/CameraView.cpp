@@ -1,7 +1,7 @@
 #include <gui/views/CameraView.hpp>
 
 namespace stanza {
-    CameraView::CameraView() : logger("CameraView") {
+    CameraView::CameraView(Platform* platform) : logger("CameraView"), View(platform) {
         if (!Camera::init()) {
             logger.error("Failed to init() Camera!"); 
             throw new std::runtime_error("Failed to init() Camera!");
@@ -38,23 +38,23 @@ namespace stanza {
         Font* font2 = new Font("Roboto", 24, FontWeight::BOLD);
         font2->setColor(Color::yellow());
 
-        StanzaApp::getPlatform()->onTouch([this](Point touch) {
+        this->platform->onTouch([this](Point touch) {
             logger.log("Touch: {} {}", touch.x, touch.y);
             Storage::storeImage(Camera::getTexture());
         });
 
-        this->block = new Block();
-        this->block->setSize(StanzaApp::getPlatform()->getViewport());
+        this->block = new Block(this->platform, {45, 45, 45, 127});
+        this->block->setSize(this->platform->getViewport());
 
-        // for (int i = 0; i < 100; i++) {
-        //     View* text;
-        //     if (i % 2 == 0)
-        //         text = new Text("ho", font2);
-        //     else
-        //         text = new Text("hi", font);
-        // 
-        //     this->block->addChild(text);
-        // }
+        for (int i = 0; i < 100; i++) {
+            View* text;
+            if (i % 2 == 0)
+                text = new Text(this->platform, "ho", font2);
+            else
+                text = new Text(this->platform, "hi", font);
+        
+            this->block->addChild(text);
+        }
 
         this->addChild(this->block);
     }
@@ -65,9 +65,9 @@ namespace stanza {
 
     void CameraView::render(Point at) {
         RenderJob* texJob = new RenderTextureJob(Camera::getTexture(), {0, 0}, TextureFitMode::FILL);
-        StanzaApp::getPlatform()->addJob(texJob);
+        platform->addJob(texJob);
 
-        this->block->setSize(StanzaApp::getPlatform()->getViewport());
+        this->block->setSize(platform->getViewport());
 
         for (auto& child : this->children) {
             child->render(at);

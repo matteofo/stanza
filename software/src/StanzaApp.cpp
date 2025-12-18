@@ -1,19 +1,12 @@
 #include <StanzaApp.hpp>
 
 namespace stanza {
-    Platform* StanzaApp::globalPlatform;
-
     StanzaApp::StanzaApp() : logger("StanzaApp") {
         this->platform = new PlatformSDL3();
-        StanzaApp::globalPlatform = this->platform;
-    }
-
-    Platform* StanzaApp::getPlatform() {
-        return StanzaApp::globalPlatform;
     }
 
     void StanzaApp::run() {
-        View* cameraView = new CameraView();
+        View* cameraView = new CameraView(this->platform);
 
         while (this->platform->update()) {
             cameraView->render();
@@ -21,6 +14,6 @@ namespace stanza {
             this->platform->render(); // queued up jobs are rendered
         }
 
-        delete StanzaApp::globalPlatform;
+        delete this->platform;
     }
 }

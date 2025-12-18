@@ -10,7 +10,7 @@
 namespace stanza {
     class PlatformSDL3: public Platform {
     private:
-        SDL_Renderer* platform;
+        SDL_Renderer* renderer;
         SDL_Window* window;
         SDL_Event event;
 
@@ -28,6 +28,8 @@ namespace stanza {
         Point getViewport() override;
 
         std::optional<Point> getTouchPoint() override;
+
+        void renderRect(Color color, Rect rect) override;
 
         void renderText(Font font, Point at, const std::string text) override;
         Point getTextSize(Font font, const std::string text) override;

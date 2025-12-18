@@ -13,12 +13,14 @@
 #include <gui/views/Text.hpp>
 
 namespace stanza {
+    class Block;
+
     class CameraView: public View {
     private:
         Logger logger;
         Block* block;
     public:
-        CameraView();
+        CameraView(Platform* platform);
         ~CameraView();
 
         void render(Point at) override;

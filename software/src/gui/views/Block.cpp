@@ -9,7 +9,18 @@ namespace stanza {
         this->padding = px;
     }
 
+    Color Block::getBackgroundColor() {
+        return this->backgroundColor;
+    }
+
+    void Block::setBackgroundColor(Color color) {
+        this->backgroundColor = color;
+    }
+
     void Block::render(Point at) {
+        RenderJob* job = new RenderRectJob(this->backgroundColor, {this->position.x, this->position.y, this->size.x, this->size.y});
+        this->platform->addJob(job);
+
         Point pos = {this->padding, this->padding};
 
         for (auto& child : this->children) {
@@ -29,11 +40,21 @@ namespace stanza {
         }
     }
 
-    Block::Block() {
+    Block::Block(Platform* platform) : View(platform) {
         this->padding = 10;
     }
 
-    Block::Block(float padding) {
+    Block::Block(Platform* platform, Color bgColor) : View(platform) {
+        this->padding = 10;
+        this->backgroundColor = bgColor;
+    }
+
+    Block::Block(Platform* platform, float padding) : View(platform) {
         this->padding = padding;
+    }
+
+    Block::Block(Platform* platform, float padding, Color bgColor) : View(platform) {
+        this->padding = padding;
+        this->backgroundColor = bgColor;
     }
 }

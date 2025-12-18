@@ -7,6 +7,8 @@
 #include <graphics/RenderJob.hpp>
 #include <graphics/jobs/RenderTextureJob.hpp>
 #include <gui/Font.hpp>
+#include <gui/Color.hpp>
+#include <util/Rect.hpp>
 #include <util/Point.hpp>
 
 #ifdef __aarch64__
@@ -53,6 +55,8 @@ namespace stanza {
         virtual void render() = 0;
 
         virtual Point getViewport() = 0;
+
+        virtual void renderRect(Color color, Rect rect) = 0;
 
         virtual void renderText(Font font, Point at, const std::string text) = 0;
         virtual Point getTextSize(Font font, const std::string text) = 0;

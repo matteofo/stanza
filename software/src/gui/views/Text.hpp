@@ -17,6 +17,6 @@ namespace stanza {
 
         void render(Point at) override;
 
-        Text(const std::string text, Font* font);
+        Text(Platform* platform, const std::string text, Font* font);
     };
 }

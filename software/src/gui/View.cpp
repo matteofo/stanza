@@ -31,6 +31,10 @@ namespace stanza {
         return this->parent;
     }
 
+    View::View(Platform* platform) {
+        this->platform = platform;
+    }
+
     View::~View() {
         for (auto& child : this->children) {
             delete child;

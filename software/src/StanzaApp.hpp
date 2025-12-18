@@ -16,13 +16,10 @@
 namespace stanza {
     class StanzaApp {
     private:
-        static Platform* globalPlatform;
         Platform* platform;
         Logger logger;
     public:
         void run();
         StanzaApp();
-
-        static Platform* getPlatform();
     };
 }

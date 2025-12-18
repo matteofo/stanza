@@ -8,8 +8,11 @@
 namespace stanza {
     class View {
     protected:
+        Platform* platform;
+
         std::vector<View*> children;
         View* parent;
+        
         Point size;
         Point position;
     public:
@@ -25,6 +28,7 @@ namespace stanza {
         virtual void render(Point at) = 0;
         virtual void render();
 
+        View(Platform* platform);
         virtual ~View();
     };
 }

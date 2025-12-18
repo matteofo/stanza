@@ -20,7 +20,7 @@ namespace stanza {
         logger.log("Initialized SDL3 backend.");
 
         this->window = SDL_CreateWindow("SDL3 Platform", width, height, SDL_WINDOW_RESIZABLE);
-        this->platform = SDL_CreateRenderer(this->window, NULL);
+        this->renderer = SDL_CreateRenderer(this->window, NULL);
 
         int count = 0;
         this->sdlTouchDevices = SDL_GetTouchDevices(&count);
@@ -99,17 +99,17 @@ namespace stanza {
 
     void PlatformSDL3::render() {
         // clear black by default
-        SDL_SetRenderDrawColor(this->platform, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(this->renderer, 0, 0, 0, 255);
         // enable alpha blending
-        SDL_SetRenderDrawBlendMode(this->platform, SDL_BLENDMODE_BLEND);
-        SDL_RenderClear(this->platform);
+        SDL_SetRenderDrawBlendMode(this->renderer, SDL_BLENDMODE_BLEND);
+        SDL_RenderClear(this->renderer);
 
         // render stuff in queue
         for (auto& job : this->jobs) {
             job->render(this);
         }
 
-        SDL_RenderPresent(this->platform);
+        SDL_RenderPresent(this->renderer);
         this->clearJobs();
     }
 
@@ -138,7 +138,7 @@ namespace stanza {
             return false;
         }
 
-        SDL_Texture* tex = SDL_CreateTextureFromSurface(this->platform, surface);
+        SDL_Texture* tex = SDL_CreateTextureFromSurface(this->renderer, surface);
         if (tex == NULL) {
             logger.error("Null SDL texture!");
             return false;
@@ -148,10 +148,10 @@ namespace stanza {
         
         switch (mode) {
             case NORMAL:
-                SDL_RenderTexture(this->platform, tex, NULL, &dst);
+                SDL_RenderTexture(this->renderer, tex, NULL, &dst);
                 break;
             case FILL:
-                SDL_RenderTexture(this->platform, tex, NULL, NULL);
+                SDL_RenderTexture(this->renderer, tex, NULL, NULL);
                 break;
             case FIT:
                 throw std::logic_error("TextureFillMode::FIT is not implemented!");
@@ -162,6 +162,21 @@ namespace stanza {
         SDL_DestroyTexture(tex);
 
         return true;
+    }
+
+    void PlatformSDL3::renderRect(Color color, Rect rect) {
+        logger.log("renderRect {} {} {} {} {}", color.r, color.g, color.b, rect.w, rect.h);
+        SDL_FRect sdlRect;
+        sdlRect.x = rect.x;
+        sdlRect.y = rect.y;
+        sdlRect.w = rect.w;
+        sdlRect.h = rect.h;
+
+        u8 r, g, b, a;
+        SDL_GetRenderDrawColor(this->renderer, &r, &g, &b, &a);
+        SDL_SetRenderDrawColor(this->renderer, color.r, color.g, color.b, color.a);
+        SDL_RenderFillRect(this->renderer, &sdlRect);
+        SDL_SetRenderDrawColor(this->renderer, r, g, b, a);
     }
 
     void PlatformSDL3::renderText(Font font, Point at, const std::string text) {
@@ -179,10 +194,10 @@ namespace stanza {
             .a = font.getColor().a
         });
 
-        SDL_Texture* texture = SDL_CreateTextureFromSurface(this->platform, surf);
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(this->renderer, surf);
         SDL_FRect rect = {at.x, at.y, (float) surf->w, (float) surf->h};
 
-        SDL_RenderTexture(this->platform, texture, NULL, &rect);
+        SDL_RenderTexture(this->renderer, texture, NULL, &rect);
 
         SDL_DestroySurface(surf);
         SDL_DestroyTexture(texture);
