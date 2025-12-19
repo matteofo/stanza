@@ -165,7 +165,6 @@ namespace stanza {
     }
 
     void PlatformSDL3::renderRect(Color color, Rect rect) {
-        logger.log("renderRect {} {} {} {} {}", color.r, color.g, color.b, rect.w, rect.h);
         SDL_FRect sdlRect;
         sdlRect.x = rect.x;
         sdlRect.y = rect.y;

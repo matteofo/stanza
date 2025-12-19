@@ -43,20 +43,10 @@ namespace stanza {
             Storage::storeImage(Camera::getTexture());
         });
 
-        this->block = new Block(this->platform, {45, 45, 45, 127});
-        this->block->setSize(this->platform->getViewport());
+        CameraInfoView* cameraInfoView = new CameraInfoView(this->platform);
+        this->addChild(cameraInfoView);
 
-        for (int i = 0; i < 100; i++) {
-            View* text;
-            if (i % 2 == 0)
-                text = new Text(this->platform, "ho", font2);
-            else
-                text = new Text(this->platform, "hi", font);
-        
-            this->block->addChild(text);
-        }
-
-        this->addChild(this->block);
+        // cameraInfoView->update();
     }
 
     CameraView::~CameraView() {
@@ -66,8 +56,6 @@ namespace stanza {
     void CameraView::render(Point at) {
         RenderJob* texJob = new RenderTextureJob(Camera::getTexture(), {0, 0}, TextureFitMode::FILL);
         platform->addJob(texJob);
-
-        this->block->setSize(platform->getViewport());
 
         for (auto& child : this->children) {
             child->render(at);

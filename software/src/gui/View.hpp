@@ -3,9 +3,10 @@
 #include <vector>
 #include <memory>
 #include <util/Point.hpp>
-#include <platform/Platform.hpp>
 
 namespace stanza {
+    class Platform;
+
     class View {
     protected:
         Platform* platform;
@@ -32,5 +33,3 @@ namespace stanza {
         virtual ~View();
     };
 }
-
-#include <StanzaApp.hpp>

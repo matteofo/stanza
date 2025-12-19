@@ -2,7 +2,6 @@
 
 namespace stanza {
     void RenderRectJob::render(Platform* platform) {
-        std::println("render rect! {} {} {}", this->color.r, this->color.g, this->color.b);
         platform->renderRect(this->color, this->rect);
     }
 

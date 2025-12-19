@@ -11,6 +11,7 @@
 #include <util/Logger.hpp>
 #include <gui/views/Block.hpp>
 #include <gui/views/Text.hpp>
+#include <gui/views/CameraInfoView.hpp>
 
 namespace stanza {
     class Block;
