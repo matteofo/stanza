@@ -20,6 +20,7 @@ namespace stanza {
     private:
         Logger logger;
         Block* block;
+        CameraInfoView* info;
     public:
         CameraView(Platform* platform);
         ~CameraView();

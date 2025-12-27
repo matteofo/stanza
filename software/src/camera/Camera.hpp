@@ -39,7 +39,6 @@ namespace stanza {
 		static bool init();
 		static void end();
 		
-		
 		static std::optional<std::vector<std::shared_ptr<libcamera::Camera>>> enumerate();
 		
 		static bool useCamera(std::shared_ptr<libcamera::Camera> camera);
@@ -48,7 +47,6 @@ namespace stanza {
 		static Texture* getTexture();
 		static void onFrame(std::function<void(Texture*)> callback);
 
-		
 		static const libcamera::ControlInfoMap& getControls();
 		
 		template<typename T, typename V>

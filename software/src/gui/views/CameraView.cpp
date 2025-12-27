@@ -43,10 +43,22 @@ namespace stanza {
             Storage::storeImage(Camera::getTexture());
         });
 
-        CameraInfoView* cameraInfoView = new CameraInfoView(this->platform);
-        this->addChild(cameraInfoView);
+        this->info = new CameraInfoView(this->platform);
+        this->addChild(this->info);
 
-        // cameraInfoView->update();
+        // this is dumb
+        i32 exposure = 0;
+
+        logger.log("{} controls available.", Camera::getControls().size());
+        for (auto& control : Camera::getControls()) {
+            logger.log("Control: {} {} {}", control.first->name(), (unsigned) control.first->type(), control.first->id());
+
+            if (control.first->id() == libcamera::controls::EXPOSURE_TIME) {
+                logger.log("Exp!: {}", (i32) control.second.def().get<i32>());
+            }
+        }
+
+        this->info->update(exposure, 0, 0);
     }
 
     CameraView::~CameraView() {
@@ -56,6 +68,16 @@ namespace stanza {
     void CameraView::render(Point at) {
         RenderJob* texJob = new RenderTextureJob(Camera::getTexture(), {0, 0}, TextureFitMode::FILL);
         platform->addJob(texJob);
+
+        i32 exposure = 0;
+
+        for (auto& control : Camera::getControls()) {
+            if (control.first->id() == libcamera::controls::EXPOSURE_TIME) {
+                exposure = control.second.def().get<i32>();
+            }
+        }
+
+        this->info->update(exposure, 0, 0);
 
         for (auto& child : this->children) {
             child->render(at);
