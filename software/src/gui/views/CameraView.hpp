@@ -12,6 +12,7 @@
 #include <gui/views/Block.hpp>
 #include <gui/views/Text.hpp>
 #include <gui/views/CameraInfoView.hpp>
+#include <gui/views/ShutterEffect.hpp>
 
 namespace stanza {
     class Block;

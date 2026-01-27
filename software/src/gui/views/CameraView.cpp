@@ -38,9 +38,16 @@ namespace stanza {
         Font* font2 = new Font("Roboto", 24, FontWeight::BOLD);
         font2->setColor(Color::yellow());
 
-        this->platform->onTouch([this](Point touch) {
+        this->platform->onTouch([this, platform](Point touch) {
             logger.log("Touch: {} {}", touch.x, touch.y);
             Storage::storeImage(Camera::getTexture());
+
+            ShutterEffect* effect = new ShutterEffect(platform);
+            effect->onDone([this, effect]() {
+                this->removeChild(effect);
+            });
+
+            this->addChild(effect);
         });
 
         this->info = new CameraInfoView(this->platform);
