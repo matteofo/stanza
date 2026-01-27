@@ -4,7 +4,9 @@ namespace stanza {
     void ShutterEffect::render(Point at) {
         Point viewport = this->platform->getViewport();
 
-        if (++frame > SHUTTER_EFFECT_SHUTTER_LENGTH) {
+        frame += platform->getDeltaTime();
+
+        if (frame > SHUTTER_EFFECT_SHUTTER_LENGTH) {
             int fadeFrame = frame - SHUTTER_EFFECT_SHUTTER_LENGTH;
             if (fadeFrame > SHUTTER_EFFECT_FADE_LENGTH) {
                 this->doneCallback();

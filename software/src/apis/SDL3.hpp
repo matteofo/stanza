@@ -37,6 +37,8 @@ namespace stanza {
         Texture loadTexture(const std::string name) override;
         bool renderTexture(Texture* texture, Point at, TextureFitMode mode) override;
 
+        float getDeltaTime();
+
         PlatformSDL3(int width, int height);
         PlatformSDL3();
         ~PlatformSDL3();

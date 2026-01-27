@@ -5,13 +5,13 @@
 #include <platform/Platform.hpp>
 #include <graphics/jobs/RenderRectJob.hpp>
 
-#define SHUTTER_EFFECT_SHUTTER_LENGTH 20
-#define SHUTTER_EFFECT_FADE_LENGTH 100
+#define SHUTTER_EFFECT_SHUTTER_LENGTH 200
+#define SHUTTER_EFFECT_FADE_LENGTH 1000
 
 namespace stanza {
     class ShutterEffect: public View {
     private:
-        int frame = 0;
+        float frame = 0;
         std::function<void()> doneCallback;
     public:
         Point getSize();

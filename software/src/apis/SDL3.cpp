@@ -98,6 +98,8 @@ namespace stanza {
     }
 
     void PlatformSDL3::render() {
+        this->lastTick = this->currentTick;
+
         // clear black by default
         SDL_SetRenderDrawColor(this->renderer, 0, 0, 0, 255);
         // enable alpha blending
@@ -110,6 +112,9 @@ namespace stanza {
         }
 
         SDL_RenderPresent(this->renderer);
+
+        this->currentTick = SDL_GetPerformanceCounter();
+
         this->clearJobs();
     }
 
@@ -284,5 +289,10 @@ namespace stanza {
         #endif
 
         return p;
+    }
+
+    float PlatformSDL3::getDeltaTime() {
+        float a = (float)((this->currentTick - this->lastTick) * 1000 / (float) SDL_GetPerformanceFrequency());
+        return a;
     }
 }

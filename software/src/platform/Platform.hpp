@@ -25,6 +25,9 @@ namespace stanza {
 
     class Platform {
     protected:
+        u64 lastTick;
+        u64 currentTick;
+
         // never make me get one of these
         std::vector<RenderJob*> jobs;
 
@@ -64,5 +67,7 @@ namespace stanza {
         bool renderTexture(Texture* texture);
         virtual bool renderTexture(Texture* texture, Point at, TextureFitMode mode) = 0;
         virtual Texture loadTexture(const std::string name) = 0;
+
+        virtual float getDeltaTime() = 0;
     };
 }
