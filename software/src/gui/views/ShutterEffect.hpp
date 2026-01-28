@@ -5,7 +5,7 @@
 #include <platform/Platform.hpp>
 #include <graphics/jobs/RenderRectJob.hpp>
 
-#define SHUTTER_EFFECT_SHUTTER_LENGTH 100
+#define SHUTTER_EFFECT_SHUTTER_LENGTH 200
 #define SHUTTER_EFFECT_FADE_LENGTH 800
 
 namespace stanza {
