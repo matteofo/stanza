@@ -13,6 +13,10 @@ ifeq ($(shell uname -m),aarch64)
 LIBS		+= -lwiringPi
 endif
 
+ifeq ($(BAD_FPS),1)
+CCFLAGS += -DBAD_FPS
+endif
+
 .PHONY: all
 all: $(TARGET)
 

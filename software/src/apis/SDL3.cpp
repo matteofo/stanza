@@ -116,6 +116,10 @@ namespace stanza {
         this->currentTick = SDL_GetPerformanceCounter();
 
         this->clearJobs();
+
+        #ifdef BAD_FPS
+        SDL_Delay(50);
+        #endif
     }
 
     Texture PlatformSDL3::loadTexture(const std::string name) {
